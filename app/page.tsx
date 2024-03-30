@@ -7,18 +7,21 @@ import styles from "./page.module.css";
 
 export default function Home() {
   // extracting data from usesession as session
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
-  // checking if sessions exists
+  if (status === "loading") {
+    return;
+  }
+
   if (session) {
-    // rendering components for logged in users
     return (
       <>
         <p>Welcome {session.user?.name}. Signed In As</p>
         <Image
           src={session.user?.image as string}
-          fill
           alt=""
+          width={50}
+          height={50}
           className="object-cover rounded-full"
         />
         <p>{session.user?.email}</p>
@@ -26,7 +29,6 @@ export default function Home() {
       </>
     );
   }
-  console.log(styles);
 
   // rendering components for not logged in users
   return (
@@ -34,6 +36,7 @@ export default function Home() {
       <div className={styles.loginCard}>
         <p>Log in</p>
         <button onClick={() => signIn("github")}>Sign in with github</button>
+        <button onClick={() => signIn("google")}>Sign in with google</button>
       </div>
     </div>
   );
